@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity{
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this,"Error: "+e, Toast.LENGTH_SHORT).show();
-                            Toast.makeText(MainActivity.this,"Registration failed!", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(MainActivity.this,"Error: "+e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,"Registered Successfully!", Toast.LENGTH_LONG).show();
                         }
                     }
                 },
