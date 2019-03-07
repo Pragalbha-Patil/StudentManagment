@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#8FD0CA</color>
+    <color name="colorBackground">#468C98</color>
+    <color name="colorPrimaryDark2">#B51A3A</color>
+    <color name="colorAccent">#E1E1E1</color>
+    <color name="colorText">#ffffff</color>
+    <color name="colorPrimary2">#FFACB7</color>
+    <color name="colorPrimaryDark">#111E6C</color>
+
+</resources>
+
