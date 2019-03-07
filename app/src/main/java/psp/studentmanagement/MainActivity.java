@@ -18,94 +18,89 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    EditText name,email,password,confirm_password;
-    Button registerBtn;
-    ProgressBar loadingBar;
-    String URL_register = "https://medicaljava.000webhostapp.com/register.php";
+    EditText name,email,phone,password;
+    Button register1;
+    ProgressBar pb_loading;
+    private static String URL_register="https://medicaljava.000webhostapp.com/register.php";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* Set values from activity_main.xml */
         name = findViewById(R.id.ed_name);
         email = findViewById(R.id.ed_email);
+
         password = findViewById(R.id.ed_password);
-        confirm_password = findViewById(R.id.ed_confirm_password);
+        register1 = findViewById(R.id.ed_register);
+        pb_loading = findViewById(R.id.ed_progress);
 
-        registerBtn = findViewById(R.id.ed_registerBtn);
-        loadingBar = findViewById(R.id.ed_progressBar);
+        register1.setOnClickListener(new View.OnClickListener() {
 
-        registerBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                /* Variables getting values */
-                final String userName = name.getText().toString().trim();
-                final String userEmail = email.getText().toString().trim();
-                final String userPassword = password.getText().toString().trim();
-                final String userConfirmPassword = confirm_password.getText().toString().trim();
 
-                if(userName.isEmpty())
-                    name.setError("Name is necessary");
-                else if(userEmail.isEmpty())
-                    email.setError("Email is necessary");
-                else if(userPassword.isEmpty())
-                    password.setError("Password is necessary");
-                else if(userConfirmPassword.isEmpty())
-                    confirm_password.setError("Confirm password is necessary");
-                else if(!userPassword.equals(userConfirmPassword))
-                    confirm_password.setError("Password doesn't match!");
-                else{
+                final String username = name.getText().toString().trim();
+                final String mail = email.getText().toString().trim();
+                final String pass = password.getText().toString().trim();
 
-                    Register(userName,userEmail,userPassword);
-                }
+                if (username.isEmpty()) name.setError("Enter the name!");
+                else if (mail.isEmpty()) email.setError("Enter the email!");
+                else if (pass.isEmpty()) password.setError("Enter the password!");
+                else register(username,mail,pass);
             }
         });
     }
 
-    private void Register(final String userName, final String userEmail, final String userPassword /*the variables are made final for Map method to take this values*/) {
-        StringRequest strReq = new StringRequest(Request.Method.POST, URL_register,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                    //rock on!!
-                        try{
-                            JSONObject jsonobj = new JSONObject(response);
-                            String succmsg = jsonobj.getString("success");
+    public void register(final String username,final String mail,final String pass) {
+        //pb_loading.setVisibility(View.VISIBLE);
+        //register1.setVisibility(View.GONE);
 
-                            if (succmsg.equals("0001"))
-                                Toast.makeText(MainActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                            //Toast.makeText(MainActivity.this,"Error: "+e, Toast.LENGTH_SHORT).show();
-                            Toast.makeText(MainActivity.this,"Registered Successfully!", Toast.LENGTH_LONG).show();
-                        }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_register, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String msg = jsonObject.getString("success");
+
+                    if(msg.equals("1")){
+                        Toast.makeText(MainActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+
                     }
-                },
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this,"Error in Registration!"+e.toString(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                    //rock on!!
+                        Toast.makeText(MainActivity.this, "Error in Registration !"+error.toString(), Toast.LENGTH_SHORT).show();
+                        pb_loading.setVisibility(View.GONE);
+                        register1.setVisibility(View.VISIBLE);
                     }
-                }
-        ) /*HashMap here before ;*/{
-
+                })
+        {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                //Send Data To Server
                 Map<String,String> params = new HashMap<>();
-                params.put( "name",userName /*Using Register() method variables*/ );
-                params.put("email",userEmail /*Using Register() method variables*/ );
-                params.put("password",userPassword /*Using Register() method variables*/ );
+                params.put("name",username);
+                params.put("email",mail);
+                params.put("mobno","12345");
+                params.put("password",pass);
                 return params;
-            }
-        } ;
 
-        RequestQueue reqQue = Volley.newRequestQueue(this);
-        reqQue.add(strReq); /*String request object added to String Queue object*/
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
 }
