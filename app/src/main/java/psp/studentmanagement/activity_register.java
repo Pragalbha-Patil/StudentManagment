@@ -23,7 +23,7 @@ public class activity_register extends AppCompatActivity{
     EditText name,email,password,confirm_password,mobno;
     Button registerBtn;
     ProgressBar loadingBar;
-    String URL_register = "http://10.10.8.233/Studentapp/register.php";
+    String URL_register = "http://pspsayscode.000webhostapp.com/register.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
